@@ -6,7 +6,7 @@ public class Coin implements Tossable {
 	private static Random random = new Random();
 
 	public TossValue toss(){
-		return (Coin.random.nextBoolean()) ? TossValue.HEADS : TossValue.TAILS;
+		return (random.nextBoolean()) ? TossValue.HEADS : TossValue.TAILS;
 	}
 }
 

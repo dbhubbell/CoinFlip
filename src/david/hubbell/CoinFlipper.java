@@ -1,33 +1,43 @@
 package david.hubbell;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class CoinFlipper {
 	private static Scanner scanner = new Scanner(System.in);
-
-    public static void main(String[] args) {
-    	int numTosses = promptForNumberOfTosses(false);
-	    for(int i = 0; i < numTosses; i++) {
-	        System.out.println(new Coin().toss().toString());
-        }
-    }
+	private static boolean running = true;
 
     private static int promptForNumberOfTosses(boolean retry) {
+    	// Display contextual prompt to user
     	if(!retry) {
 		    System.out.print("How many tosses? : ");
 	    } else {
     		System.out.print("Please enter an integer value >=[\nHow many tosses? : ");
 	    }
-    	String userInput = scanner.nextLine();
-    	int input;
+
+	    // return sanitized input
     	try {
-    		input = Integer.parseInt(userInput);
+    		return Integer.parseInt(scanner.nextLine());
 	    } catch (NumberFormatException e) {
     		return promptForNumberOfTosses(true);
 	    }
-
-	    return input;
     }
 
+    private static void promptToRunAgain() {
+    	System.out.print("Do you want to run again? (y/n) : ");
+    	String response = scanner.nextLine().toLowerCase();
+    	running = (response.equals("y"));
+    }
 
+	public static void main(String[] args) {
+    	while(running) {
+		    int numTosses = promptForNumberOfTosses(false);
+		    UpdatableGraph graph = new HorizontalCoinFlipHistogram();
+		    for (int i = 0; i < numTosses; i++) {
+			    graph.update(new Coin().toss());
+		    }
+		    graph.print();
+		    promptToRunAgain();
+	    }
+	}
 }
